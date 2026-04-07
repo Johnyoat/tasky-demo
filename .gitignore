@@ -1,0 +1,56 @@
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+
+# IDEs and editors
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node.js / npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.bak
+
+# Angular
+dist/
+.angular/
+.nx/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+*.lcov
+.nyc_output/
+
+# Build outputs
+build/
+out/
+
+# Go
+tasky-api/bin/
+tasky-api/pkg/
+tasky-api/vendor/
+tasky-api/*.exe
+tasky-api/*.test
+tasky-api/*.out
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
