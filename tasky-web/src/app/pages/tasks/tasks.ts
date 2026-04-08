@@ -1,4 +1,4 @@
-import {Component, TemplateRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, TemplateRef} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -7,13 +7,13 @@ import {MatDivider} from '@angular/material/list';
 import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog, MatDialogClose, MatDialogContent} from '@angular/material/dialog';
-import {inject} from 'vitest';
 
 @Component({
   selector: 'app-tasks',
   imports: [MatCardModule, MatButtonModule, FormsModule, MatCheckbox, MatDivider, MatIcon, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDialogClose, MatError],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Tasks {
 
@@ -37,6 +37,10 @@ export class Tasks {
   ];
 
   constructor(private dialog: MatDialog) {
+    this.filteredTasks = this.tasks;
+  }
+  
+  ngOnInit() {
     this.filteredTasks = this.tasks;
   }
 
