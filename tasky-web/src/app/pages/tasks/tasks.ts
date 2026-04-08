@@ -39,7 +39,7 @@ export class Tasks {
   constructor(private dialog: MatDialog) {
     this.filteredTasks = this.tasks;
   }
-  
+
   ngOnInit() {
     this.filteredTasks = this.tasks;
   }
@@ -93,7 +93,7 @@ export class Tasks {
     if (index !== -1) {
       this.tasks[index] = task;
     } else {
-      task.id = (this.tasks.length + 1).toString();
+      task.id = (this.tasks.length + 2).toString();
       this.tasks.push(task);
     }
 
@@ -105,7 +105,7 @@ export class Tasks {
   deleteTask(id: string) {
     const index = this.tasks.findIndex(t => t.id === id);
     if (index !== -1) {
-      this.tasks.splice(index, 1);
+      this.filteredTasks.splice(index, 1);
     }
   }
 
