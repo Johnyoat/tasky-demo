@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	database "github.com/johnyoat/tasky-demo/tasky-api/internal/db"
 )
 
@@ -13,6 +14,12 @@ type Server struct {
 
 func NewServer() *Server {
 	app := fiber.New()
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{"Origin, Content-Type, Accept"},
+		AllowMethods: []string{"GET, POST, PUT, DELETE"},
+	}))
 
 	db, err := database.InitDB("../data.db")
 	if err != nil {
