@@ -1,0 +1,22 @@
+services:
+  tasky-api:
+    build:
+      context: ./tasky-api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/data
+    environment:
+      - DB_PATH=/data/tasks.db
+    restart: always
+
+  tasky-web:
+    build:
+      context: ./tasky-web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - tasky-api
+    restart: always
