@@ -4,22 +4,30 @@ import {MatCardModule} from '@angular/material/card';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatDivider} from '@angular/material/list';
-import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
-import {MatDialog, MatDialogContent} from '@angular/material/dialog';
+import {MatDialog, MatDialogClose, MatDialogContent} from '@angular/material/dialog';
 import {inject} from 'vitest';
 
 @Component({
   selector: 'app-tasks',
-  imports: [MatCardModule, MatButtonModule, FormsModule, MatCheckbox, MatDivider, MatIcon, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput],
+  imports: [MatCardModule, MatButtonModule, FormsModule, MatCheckbox, MatDivider, MatIcon, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput, MatDialogClose, MatError],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css',
 })
 export class Tasks {
 
-  isFormValid = false;
+  //Validation
+  isTaskTitleValid = false;
+  isTaskDescriptionValid = false;
+
+  // Check if the task is new
+  isTaskNew = false;
+
   searchTerm = '';
-  task:TaskModel = {id: '', title: '', description: '', completed: false};
+  task: TaskModel = {id: '', title: '', description: '', completed: false};
+
+
   filteredTasks: TaskModel[] = [];
   tasks: TaskModel[] = [
     {id: '1', title: 'Task 1', description: 'Description 1', completed: false},
@@ -27,21 +35,17 @@ export class Tasks {
     {id: '3', title: 'Task 3', description: 'Description 3', completed: false},
     {id: '4', title: 'Task 4', description: 'Description 4', completed: false},
   ];
-constructor(private dialog: MatDialog) {
-  this.filteredTasks = this.tasks;
-}
+
+  constructor(private dialog: MatDialog) {
+    this.filteredTasks = this.tasks;
+  }
 
 
-  addTask() {
-   console.log("add task")
+// adding task
+  addTask(templateRef: TemplateRef<any>) {
     this.task = {id: '', title: '', description: '', completed: false};
+    this.openDialog(templateRef, this.task, true);
   }
-
-
-  viewTask(task: TaskModel) {
-    console.log(task);
-  }
-
 
   search() {
     console.log("search")
@@ -55,6 +59,7 @@ constructor(private dialog: MatDialog) {
       return task.id.toLowerCase().includes(this.searchTerm.toLowerCase()) || task.title.toLowerCase().includes(this.searchTerm.toLowerCase())
     });
   }
+
   //Toggle task
   toggleTask(id: string) {
     const task = this.tasks.find(t => t.id === id);
@@ -64,11 +69,32 @@ constructor(private dialog: MatDialog) {
   }
 
   //Update task
-  updateTask(task: TaskModel) {
+  saveOrUpdateTask() {
+    const task = this.task;
     const index = this.tasks.findIndex(t => t.id === task.id);
+
+
+    // Validate task title
+    if (task.title.trim() === '') {
+      this.isTaskTitleValid = false;
+      return;
+    }
+
+    // Validate task description
+    if (task.description.trim() === '') {
+      this.isTaskDescriptionValid = false;
+      return;
+    }
+
     if (index !== -1) {
       this.tasks[index] = task;
+    } else {
+      task.id = (this.tasks.length + 1).toString();
+      this.tasks.push(task);
     }
+
+    this.filteredTasks = this.tasks;
+    this.dialog.closeAll();
   }
 
   //Delete task
@@ -79,7 +105,8 @@ constructor(private dialog: MatDialog) {
     }
   }
 
-  openDialog(dialogRef : TemplateRef<any>, task: TaskModel) {
+  openDialog(dialogRef: TemplateRef<any>, task: TaskModel, isNew = false) {
+    this.isTaskNew = isNew;
     this.task = task;
     this.dialog.open(dialogRef, {
       width: '400px',
