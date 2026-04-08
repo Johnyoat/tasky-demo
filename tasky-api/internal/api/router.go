@@ -2,10 +2,9 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v3"
-	"gorm.io/gorm"
 )
 
-func InitRouter(app *fiber.App, db *gorm.DB) {
+func InitRouter(app *fiber.App) {
 
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{

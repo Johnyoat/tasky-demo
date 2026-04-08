@@ -4,26 +4,24 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v3"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	database "github.com/johnyoat/tasky-demo/tasky-api/internal/db"
 )
 
 type Server struct {
 	App *fiber.App
-	DB  *gorm.DB
 }
 
 func NewServer() *Server {
 	app := fiber.New()
-	db, err := gorm.Open(sqlite.Open("../data.db"), &gorm.Config{})
 
-	if err != nil {
-		log.Fatal(err)
+	db := database.InitDB("../data.db")
+	if db == nil {
+		log.Fatal("Failed to initialize database")
 	}
 
-	InitRouter(app, db)
+	InitRouter(app)
 
-	return &Server{App: app, DB: db}
+	return &Server{App: app}
 }
 
 func (s *Server) Start() error {

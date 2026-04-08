@@ -1,7 +1,9 @@
 package handlers
 
-import "database/sql"
+import (
+	"gorm.io/gorm"
+)
 
-func GetTasks(db *sql.DB) {
+func GetTasks(db *gorm.DB) {
 
 }
