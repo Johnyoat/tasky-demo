@@ -19,4 +19,7 @@ func InitRouter(app *fiber.App, db *gorm.DB) {
 	v1 := app.Group("api/v1")
 
 	v1.Get("/tasks", handlers.GetTasks(db))
+	v1.Post("/tasks", handlers.CreateTask(db))
+	v1.Put("/tasks/:id", handlers.UpdateTask(db))
+	v1.Delete("/tasks/:id", handlers.DeleteTask(db))
 }
