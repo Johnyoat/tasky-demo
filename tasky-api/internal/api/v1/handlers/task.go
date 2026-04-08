@@ -56,7 +56,7 @@ func UpdateTask(db *gorm.DB) fiber.Handler {
 		id := c.Params("id")
 		task := new(database.Task)
 
-		if err := db.First(task, id).Error; err != nil {
+		if err := db.Where("id = ?", id).First(task).Error; err != nil {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"status":  404,
 				"message": "Task not found",
@@ -94,7 +94,7 @@ func DeleteTask(db *gorm.DB) fiber.Handler {
 		id := c.Params("id")
 		task := new(database.Task)
 
-		if err := db.First(task, id).Error; err != nil {
+		if err := db.Where("id = ?", id).First(task).Error; err != nil {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"status":  404,
 				"message": "Task not found",
