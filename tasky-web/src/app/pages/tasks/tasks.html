@@ -1,16 +1,38 @@
-<div class="m-5 p-5 bg-blue-100">
+<div class="m-5 p-5 ">
   <div class="flex justify-between mb-5">
     <h1 class="text-2xl font-bold">Tasks</h1>
     <div>
-      <input type="text" placeholder="Search" class="px-2 mr-2"/>
-      <button (click)="addTask()">Add Task</button>
+      <input type="text" placeholder="Search" class="p-2 border rounded" (input)="search()" [(ngModel)]="searchTerm"/>
+      <button mat-button (click)="search()" class="mx-2"><mat-icon>search</mat-icon></button>
+      <button mat-button  matButton="filled" (click)="addTask()">
+        <mat-icon>add</mat-icon>
+        Add Task</button>
     </div>
   </div>
-  <ul>
-    @for (task of tasks; track task.id) {
-      <li  (click)="viewTask(task)" class="cursor-pointer">
-        {{ task.title }} - {{ task.description }} - {{ task.completed ? 'Completed' : 'Not Completed' }}
-      </li>
+
+
+  <div>
+    @for (task of filteredTasks; track task.id) {
+    <div class="space-y-2">
+      <mat-checkbox class="mt-2" [checked]="task.completed" (change)="toggleTask(task.id)">
+        <div>
+          <p class="font-bold">{{ task.title }}</p>
+          <p class="text-gray-600">{{ task.description }}</p>
+        </div>
+      </mat-checkbox>
+      <div>
+        <div class="flex space-x-2">
+          <button mat-button (click)="updateTask(task)">
+            <mat-icon>edit</mat-icon>
+            Update</button>
+          <button mat-button (click)="deleteTask(task.id)">
+            <mat-icon>delete</mat-icon>
+            Delete</button>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </div>
     }
-  </ul>
+  </div>
 </div>
+
