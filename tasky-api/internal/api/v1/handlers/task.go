@@ -8,12 +8,14 @@ import (
 
 func GetTasks(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
-		tasks := new([]database.Task)
+		var tasks []database.Task
 
 		err := db.Find(&tasks).Error
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to fetch tasks",
+				"status":  500,
+				"message": "Failed to fetch tasks",
+				"data":    nil,
 			})
 		}
 
@@ -24,7 +26,6 @@ func GetTasks(db *gorm.DB) fiber.Handler {
 		})
 	}
 }
-
 func CreateTask(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		task := new(database.Task)
@@ -35,7 +36,7 @@ func CreateTask(db *gorm.DB) fiber.Handler {
 			})
 		}
 
-		err := db.Create(&task).Error
+		err := db.Create(task).Error
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "Failed to create task",
@@ -55,7 +56,7 @@ func UpdateTask(db *gorm.DB) fiber.Handler {
 		id := c.Params("id")
 		task := new(database.Task)
 
-		if err := db.First(&task, id).Error; err != nil {
+		if err := db.First(task, id).Error; err != nil {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"status":  404,
 				"message": "Task not found",
@@ -71,7 +72,7 @@ func UpdateTask(db *gorm.DB) fiber.Handler {
 			})
 		}
 
-		err := db.Save(&task).Error
+		err := db.Save(task).Error
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"status":  500,
@@ -93,7 +94,7 @@ func DeleteTask(db *gorm.DB) fiber.Handler {
 		id := c.Params("id")
 		task := new(database.Task)
 
-		if err := db.First(&task, id).Error; err != nil {
+		if err := db.First(task, id).Error; err != nil {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"status":  404,
 				"message": "Task not found",
@@ -101,7 +102,7 @@ func DeleteTask(db *gorm.DB) fiber.Handler {
 			})
 		}
 
-		err := db.Delete(&task).Error
+		err := db.Delete(task).Error
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"status":  500,

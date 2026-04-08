@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/google/uuid"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -8,10 +9,15 @@ import (
 var DB *gorm.DB
 
 type Task struct {
-	gorm.Model
-	Title       string `gorm:"not null"`
-	Description string
-	Completed   bool `gorm:"default:false"`
+	ID          string `gorm:"primaryKey" json:"id"`
+	Title       string `gorm:"not null" json:"title"`
+	Description string `json:"description"`
+	Completed   bool   `gorm:"default:false" json:"completed"`
+}
+
+func (t *Task) BeforeCreate(tx *gorm.DB) (err error) {
+	t.ID = uuid.New().String()
+	return
 }
 
 // InitDB initializes the GORM database connection and auto-migrates the Task table
@@ -28,45 +34,4 @@ func InitDB(dbPath string) (*gorm.DB, error) {
 	}
 
 	return DB, nil
-}
-
-// CreateTask inserts a new task into the database using GORM
-func CreateTask(task *Task) error {
-	return DB.Create(task).Error
-}
-
-// GetTask retrieves a single task by ID using GORM
-func GetTask(id uint) (*Task, error) {
-	var task Task
-	err := DB.First(&task, id).Error
-	if err != nil {
-		return nil, err
-	}
-	return &task, nil
-}
-
-// GetAllTasks retrieves all tasks from the database using GORM
-func GetAllTasks() ([]Task, error) {
-	var tasks []Task
-	err := DB.Find(&tasks).Error
-	return tasks, err
-}
-
-// UpdateTask updates an existing task in the database using GORM
-func UpdateTask(task *Task) error {
-	return DB.Save(task).Error
-}
-
-// DeleteTask deletes a task from the database by ID using GORM
-func DeleteTask(id uint) error {
-	return DB.Delete(&Task{}, id).Error
-}
-
-// CloseDB closes the GORM database connection
-func CloseDB() error {
-	sqlDB, err := DB.DB()
-	if err != nil {
-		return err
-	}
-	return sqlDB.Close()
 }
