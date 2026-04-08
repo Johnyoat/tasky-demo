@@ -1,19 +1,23 @@
-import {Component} from '@angular/core';
+import {Component, TemplateRef} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatDivider} from '@angular/material/list';
-import {MatInput} from '@angular/material/input';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
+import {MatDialog, MatDialogContent} from '@angular/material/dialog';
+import {inject} from 'vitest';
 
 @Component({
   selector: 'app-tasks',
-  imports: [MatCardModule, MatButtonModule, FormsModule, MatCheckbox, MatDivider, MatInput, MatIcon],
+  imports: [MatCardModule, MatButtonModule, FormsModule, MatCheckbox, MatDivider, MatIcon, MatDialogContent, ReactiveFormsModule, MatFormField, MatLabel, MatInput],
   templateUrl: './tasks.html',
   styleUrl: './tasks.css',
 })
 export class Tasks {
+
+  isFormValid = false;
   searchTerm = '';
   task:TaskModel = {id: '', title: '', description: '', completed: false};
   filteredTasks: TaskModel[] = [];
@@ -23,7 +27,7 @@ export class Tasks {
     {id: '3', title: 'Task 3', description: 'Description 3', completed: false},
     {id: '4', title: 'Task 4', description: 'Description 4', completed: false},
   ];
-constructor() {
+constructor(private dialog: MatDialog) {
   this.filteredTasks = this.tasks;
 }
 
@@ -73,6 +77,13 @@ constructor() {
     if (index !== -1) {
       this.tasks.splice(index, 1);
     }
+  }
+
+  openDialog(dialogRef : TemplateRef<any>, task: TaskModel) {
+    this.task = task;
+    this.dialog.open(dialogRef, {
+      width: '400px',
+    })
   }
 
 }
