@@ -20,8 +20,8 @@ import {TaskModel} from '../../../models/task.model';
 export class Tasks implements OnInit {
 
   //Validation
-  isTaskTitleValid = false;
-  isTaskDescriptionValid = false;
+  isTaskTitleValid = true;
+  isTaskDescriptionValid = true;
 
   // Check if the task is new
   isTaskNew = false;
@@ -56,7 +56,6 @@ export class Tasks implements OnInit {
   }
 
   search() {
-    console.log("search")
     //Check if the search term is empty
     if (this.searchTerm.trim() === '') {
       this.filteredTasks = this.tasks;
@@ -85,15 +84,21 @@ export class Tasks implements OnInit {
   saveOrUpdateTask() {
     const task = this.task;
 
+    // Reset validation states
+    this.isTaskTitleValid = true;
+    this.isTaskDescriptionValid = true;
+
     // Validate task title
     if (task.title.trim() === '') {
       this.isTaskTitleValid = false;
-      return;
     }
 
     // Validate task description
     if (task.description.trim() === '') {
       this.isTaskDescriptionValid = false;
+    }
+
+    if (!this.isTaskTitleValid || !this.isTaskDescriptionValid) {
       return;
     }
 
@@ -120,6 +125,8 @@ export class Tasks implements OnInit {
   openDialog(dialogRef: TemplateRef<any>, task: TaskModel, isNew = false) {
     this.isTaskNew = isNew;
     this.task = {...task};
+    this.isTaskTitleValid = true;
+    this.isTaskDescriptionValid = true;
     this.dialog.open(dialogRef, {
       width: '400px',
     })
