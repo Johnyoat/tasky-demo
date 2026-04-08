@@ -14,12 +14,12 @@ type Server struct {
 func NewServer() *Server {
 	app := fiber.New()
 
-	db := database.InitDB("../data.db")
-	if db == nil {
-		log.Fatal("Failed to initialize database")
+	db, err := database.InitDB("../data.db")
+	if err != nil {
+		log.Fatal("Failed to initialize database: ", err)
 	}
 
-	InitRouter(app)
+	InitRouter(app, db)
 
 	return &Server{App: app}
 }

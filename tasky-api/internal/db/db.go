@@ -15,14 +15,19 @@ type Task struct {
 }
 
 // InitDB initializes the GORM database connection and auto-migrates the Task table
-func InitDB(dbPath string) error {
+func InitDB(dbPath string) (*gorm.DB, error) {
 	var err error
 	DB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return DB.AutoMigrate(&Task{})
+	err = DB.AutoMigrate(&Task{})
+	if err != nil {
+		return nil, err
+	}
+
+	return DB, nil
 }
 
 // CreateTask inserts a new task into the database using GORM

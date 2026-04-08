@@ -2,9 +2,11 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"github.com/johnyoat/tasky-demo/tasky-api/internal/api/v1/handlers"
+	"gorm.io/gorm"
 )
 
-func InitRouter(app *fiber.App) {
+func InitRouter(app *fiber.App, db *gorm.DB) {
 
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -13,4 +15,8 @@ func InitRouter(app *fiber.App) {
 		})
 	},
 	)
+
+	v1 := app.Group("api/v1")
+
+	v1.Get("/tasks", handlers.GetTasks(db))
 }
