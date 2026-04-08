@@ -2,11 +2,14 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/johnyoat/tasky-demo/tasky-api/internal/api/v1/handlers"
 	"gorm.io/gorm"
 )
 
 func InitRouter(app *fiber.App, db *gorm.DB) {
+
+	app.Use(cors.New())
 
 	app.Get("/", func(c fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
