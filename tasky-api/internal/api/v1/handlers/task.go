@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// GetTasks returns a fiber handler that fetches all tasks from the database
 func GetTasks(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		var tasks []database.Task
@@ -26,6 +27,8 @@ func GetTasks(db *gorm.DB) fiber.Handler {
 		})
 	}
 }
+
+// CreateTask returns a fiber handler that creates a new task in the database
 func CreateTask(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		task := new(database.Task)
@@ -51,6 +54,7 @@ func CreateTask(db *gorm.DB) fiber.Handler {
 	}
 }
 
+// UpdateTask returns a fiber handler that updates an existing task by its ID
 func UpdateTask(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		id := c.Params("id")
@@ -89,6 +93,7 @@ func UpdateTask(db *gorm.DB) fiber.Handler {
 	}
 }
 
+// DeleteTask returns a fiber handler that deletes a task by its ID
 func DeleteTask(db *gorm.DB) fiber.Handler {
 	return func(c fiber.Ctx) error {
 		id := c.Params("id")

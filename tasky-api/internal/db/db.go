@@ -8,6 +8,7 @@ import (
 
 var DB *gorm.DB
 
+// Task represents the database model for a task
 type Task struct {
 	ID          string `gorm:"primaryKey" json:"id"`
 	Title       string `gorm:"not null" json:"title"`
@@ -15,6 +16,7 @@ type Task struct {
 	Completed   bool   `gorm:"default:false" json:"completed"`
 }
 
+// BeforeCreate generates a new UUID for the task ID before it is created in the database
 func (t *Task) BeforeCreate(tx *gorm.DB) (err error) {
 	t.ID = uuid.New().String()
 	return

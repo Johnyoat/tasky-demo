@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// InitRouter initializes all the API routes for the application
 func InitRouter(app *fiber.App, db *gorm.DB) {
 
 	app.Get("/", func(c fiber.Ctx) error {
